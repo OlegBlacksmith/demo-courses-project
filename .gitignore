@@ -161,3 +161,6 @@ $RECYCLE.BIN/
 # ---------------------------------------------------------
 **/.claude/settings.local.json
 docs/
+CLAUDE.md
+AGENTS.md
+.claude/
