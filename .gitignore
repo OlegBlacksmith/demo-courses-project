@@ -1,0 +1,162 @@
+# =========================================================
+# Monorepo .gitignore — Next.js (Node/TS) + FastAPI (Python)
+# Паттерны без ведущего "/" срабатывают в любой подпапке,
+# поэтому один корневой файл покрывает оба проекта.
+# =========================================================
+
+# ---------------------------------------------------------
+# Секреты и переменные окружения
+# ---------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.crt
+secrets/
+
+# ---------------------------------------------------------
+# Node.js / pnpm
+# pnpm-lock.yaml, pnpm-workspace.yaml и .npmrc — КОММИТИМ
+# ---------------------------------------------------------
+node_modules/
+.pnpm-store/
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Защита от случайных lock-файлов других менеджеров
+package-lock.json
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---------------------------------------------------------
+# Next.js
+# ---------------------------------------------------------
+.next/
+out/
+next-env.d.ts
+.vercel/
+*.tsbuildinfo
+
+# ---------------------------------------------------------
+# Монорепо-инструменты (Turborepo / Nx)
+# ---------------------------------------------------------
+.turbo/
+.nx/cache/
+.nx/workspace-data/
+
+# ---------------------------------------------------------
+# JS/TS тесты и сборка
+# ---------------------------------------------------------
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+blob-report/
+**/playwright/.cache/
+storybook-static/
+dist/
+build/
+
+# ---------------------------------------------------------
+# Python
+# ---------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Виртуальное окружение uv
+# .python-version — КОММИТИМ (uv берёт из него версию Python)
+.venv/
+
+# Сборка / упаковка
+*.egg-info/
+*.egg
+.eggs/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+MANIFEST
+develop-eggs/
+sdist/
+
+# Тесты, линтеры, типизация
+.pytest_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.dmypy.json
+dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Локальные БД / артефакты
+*.sqlite
+*.sqlite3
+*.db
+celerybeat-schedule
+celerybeat.pid
+
+# ---------------------------------------------------------
+# Docker
+# ---------------------------------------------------------
+docker-compose.override.yml
+.docker/
+
+# ---------------------------------------------------------
+# Логи и временные файлы
+# ---------------------------------------------------------
+logs/
+*.log
+tmp/
+temp/
+*.tmp
+*.pid
+*.seed
+*.pid.lock
+
+# ---------------------------------------------------------
+# IDE / редакторы
+# ---------------------------------------------------------
+.idea/
+*.iml
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+*.swp
+*.swo
+*~
+.history/
+
+# ---------------------------------------------------------
+# ОС
+# ---------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ---------------------------------------------------------
+# AI-инструменты (локальные настройки, не общие)
+# ---------------------------------------------------------
+**/.claude/settings.local.json
