@@ -47,6 +47,7 @@ next-env.d.ts
 .turbo/
 .nx/cache/
 .nx/workspace-data/
+apps/web/src/generated/
 
 # ---------------------------------------------------------
 # JS/TS тесты и сборка
