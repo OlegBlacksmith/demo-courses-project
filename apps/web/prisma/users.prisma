@@ -1,0 +1,83 @@
+model User {
+  id                 Int                @id @default(autoincrement())
+  publicUId          String             @unique @default(cuid(2))
+  bio                String?            @db.Text
+  createdAt          DateTime           @default(now())
+  deletedAt          DateTime?
+  updatedAt          DateTime           @updatedAt
+  firstName          String             @db.VarChar(100)
+  lastName           String             @db.VarChar(100)
+  patronymic         String?            @db.VarChar(100)
+  avatar             String?            @db.VarChar(300)
+  email              String             @unique @db.VarChar(255)
+  userRole           UserRole           @default(USER)
+  emailVerified      Boolean            @default(false)
+  passwordHash       String
+  tel                String?            @unique @db.VarChar(25)
+  enrollments        Enrollment[]
+  userLessonProgress LessonProgress[]
+  courseInstructors  CourseInstructor[]
+  moduleInstructors  ModuleInstructor[]
+}
+
+model CourseInstructor {
+  courseId             Int
+  course               Course               @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  userId               Int
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseInstructorRole CourseInstructorRole @default(CO_AUTHOR)
+
+  @@id([courseId, userId])
+}
+
+model ModuleInstructor {
+  moduleId             Int
+  module               Module               @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  userId               Int
+  user                 User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moduleInstructorRole ModuleInstructorRole @default(AUTHOR)
+
+  @@id([moduleId, userId])
+}
+
+model Enrollment {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id           Int       @id @default(autoincrement())
+  lessonId     Int
+  lesson       Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+  lastViewedAt DateTime  @default(now())
+
+  @@unique([userId, lessonId])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  CURATOR
+  INSTRUCTOR
+}
+
+enum CourseInstructorRole {
+  LEAD
+  CO_AUTHOR
+}
+
+enum ModuleInstructorRole {
+  AUTHOR
+  TEACHER
+}
