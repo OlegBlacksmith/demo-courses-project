@@ -1,0 +1,201 @@
+model Course {
+  id              Int                 @id @default(autoincrement())
+  publicUId       String              @unique @default(cuid(2))
+  description     String              @db.Text
+  title           String              @db.VarChar(250)
+  createdAt       DateTime            @default(now())
+  deletedAt       DateTime?
+  updatedAt       DateTime            @updatedAt
+  statusChangedAt DateTime            @default(now())
+  picture         String              @db.VarChar(500)
+  price           Int
+  indexNumber     Int
+  categoryId      Int?
+  category        CourseCategory?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  slug            String              @unique @db.VarChar(300)
+  status          CourseStatus        @default(DRAFT)
+  translations    CourseTranslation[]
+  modules         Module[]
+  instructors     CourseInstructor[]
+  enrollments     Enrollment[]
+}
+
+model CourseTranslation {
+  id          Int               @id @default(autoincrement())
+  courseId    Int
+  course      Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  locale      TranslationLocale
+  title       String            @db.VarChar(250)
+  description String            @db.Text
+  status      TranslationStatus @default(DRAFT)
+  slug        String            @db.VarChar(300)
+  isStale     Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([courseId, locale])
+  @@unique([locale, slug])
+}
+
+model Module {
+  id                Int                 @id @default(autoincrement())
+  publicUId         String              @unique @default(cuid(2))
+  description       String              @db.Text
+  title             String              @db.VarChar(250)
+  createdAt         DateTime            @default(now())
+  deletedAt         DateTime?
+  updatedAt         DateTime            @updatedAt
+  courseId          Int
+  course            Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  indexNumber       Int
+  slug              String              @db.VarChar(300)
+  status            ContentStatus       @default(DRAFT)
+  lessons           Lesson[]
+  translations      ModuleTranslation[]
+  moduleInstructors ModuleInstructor[]
+
+  @@unique([courseId, slug])
+}
+
+model ModuleTranslation {
+  id          Int               @id @default(autoincrement())
+  moduleId    Int
+  module      Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  locale      TranslationLocale
+  isStale     Boolean           @default(false)
+  description String            @db.Text
+  title       String            @db.VarChar(250)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  slug        String            @db.VarChar(300)
+  status      TranslationStatus @default(DRAFT)
+
+  @@unique([moduleId, locale])
+}
+
+model Lesson {
+  id           Int                 @id @default(autoincrement())
+  publicUId    String              @unique @default(cuid(2))
+  description  String              @db.Text
+  title        String              @db.VarChar(250)
+  createdAt    DateTime            @default(now())
+  deletedAt    DateTime?
+  updatedAt    DateTime            @updatedAt
+  moduleId     Int
+  module       Module              @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  indexNumber  Int
+  slug         String              @db.VarChar(300)
+  status       ContentStatus       @default(DRAFT)
+  components   Component[]
+  translations LessonTranslation[]
+  progress     LessonProgress[]
+
+  @@unique([moduleId, slug])
+}
+
+model LessonTranslation {
+  id          Int               @id @default(autoincrement())
+  lessonId    Int
+  lesson      Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  locale      TranslationLocale
+  isStale     Boolean           @default(false)
+  description String            @db.Text
+  title       String            @db.VarChar(250)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  slug        String            @db.VarChar(300)
+  status      TranslationStatus @default(DRAFT)
+
+  @@unique([lessonId, locale])
+}
+
+model Component {
+  id              Int                    @id @default(autoincrement())
+  publicUId       String                 @unique @default(cuid(2))
+  techDescription String                 @db.Text
+  title           String                 @db.VarChar(250)
+  createdAt       DateTime               @default(now())
+  deletedAt       DateTime?
+  updatedAt       DateTime               @updatedAt
+  content         Json
+  type            ComponentType
+  lessonId        Int
+  lesson          Lesson                 @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  indexNumber     Int
+  translations    ComponentTranslation[]
+}
+
+model ComponentTranslation {
+  id          Int               @id @default(autoincrement())
+  componentId Int
+  component   Component         @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  locale      TranslationLocale
+  isStale     Boolean           @default(false)
+  title       String            @db.VarChar(250)
+  content     Json
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  status      TranslationStatus @default(DRAFT)
+
+  @@unique([componentId, locale])
+}
+
+model CourseCategory {
+  id           Int                         @id @default(autoincrement())
+  publicUId    String                      @unique @default(cuid(2))
+  description  String                      @db.Text
+  createdAt    DateTime                    @default(now())
+  deletedAt    DateTime?
+  updatedAt    DateTime                    @updatedAt
+  title        String                      @db.VarChar(250)
+  status       ContentStatus               @default(DRAFT)
+  indexNumber  Int
+  slug         String                      @unique @db.VarChar(300)
+  courses      Course[]
+  translations CourseCategoryTranslation[]
+}
+
+model CourseCategoryTranslation {
+  id          Int               @id @default(autoincrement())
+  categoryId  Int
+  category    CourseCategory    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  description String            @db.Text
+  locale      TranslationLocale
+  isStale     Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  status      TranslationStatus @default(DRAFT)
+  title       String            @db.VarChar(250)
+  slug        String            @db.VarChar(300)
+
+  @@unique([categoryId, locale])
+  @@unique([locale, slug])
+}
+
+enum ComponentType {
+  TEXT
+  VIDEO
+  IMAGE
+  CODE
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+  ARCHIVED
+}
+
+enum ContentStatus {
+  PUBLISHED
+  DRAFT
+}
+
+enum TranslationStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum TranslationLocale {
+  EN
+}
