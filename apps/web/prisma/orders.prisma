@@ -1,0 +1,52 @@
+model Order {
+  id                Int         @id @default(autoincrement())
+  publicUId         String      @unique @default(cuid(2))
+  userId            Int
+  user              User        @relation(fields: [userId], references: [id])
+  status            OrderStatus @default(PENDING)
+  totalAmount       Int
+  providerPaymentId String?     @unique
+  paidAt            DateTime?
+  deletedAt         DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  orderItems        OrderItem[]
+}
+
+model OrderItem {
+  orderId            Int
+  order              Order  @relation(fields: [orderId], references: [id])
+  courseId           Int
+  course             Course @relation(fields: [courseId], references: [id])
+  price              Int
+  priceAfterDiscount Int
+
+  @@id([orderId, courseId])
+}
+
+model Cart {
+  id         Int        @id @default(autoincrement())
+  publicUId  String     @unique @default(cuid(2))
+  userId     Int?       @unique
+  user       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestToken String?    @unique
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  cartItems  CartItem[]
+}
+
+model CartItem {
+  cartId   Int
+  cart     Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  courseId Int
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  addedAt  DateTime @default(now())
+
+  @@id([cartId, courseId])
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+}
