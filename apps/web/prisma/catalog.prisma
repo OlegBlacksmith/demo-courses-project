@@ -18,6 +18,8 @@ model Course {
   modules         Module[]
   instructors     CourseInstructor[]
   enrollments     Enrollment[]
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
 }
 
 model CourseTranslation {
