@@ -18,6 +18,8 @@ model User {
   userLessonProgress LessonProgress[]
   courseInstructors  CourseInstructor[]
   moduleInstructors  ModuleInstructor[]
+  userOrders         Order[]
+  userCart           Cart?
 }
 
 model CourseInstructor {
