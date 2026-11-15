@@ -1,0 +1,107 @@
+model Promotion {
+  id              Int                    @id @default(autoincrement())
+  name            String                 @db.VarChar(250)
+  description     String?                @db.Text
+  discountPercent Int
+  discountScope   DiscountScope          @default(COURSE)
+  courseId        Int?
+  course          Course?                @relation(fields: [courseId], references: [id])
+  categoryId      Int?
+  category        CourseCategory?        @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  deletedAt       DateTime?
+  startsAt        DateTime?
+  expiresAt       DateTime?
+  isActive        Boolean                @default(false)
+  translations    PromotionTranslation[]
+  orderItems      OrderItem[]
+}
+
+model PromotionTranslation {
+  id          Int               @id @default(autoincrement())
+  promotion   Promotion         @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  promotionId Int
+  locale      TranslationLocale
+  isStale     Boolean           @default(false)
+  name        String            @db.VarChar(250)
+  description String?           @db.Text
+  status      TranslationStatus @default(DRAFT)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([promotionId, locale])
+}
+
+model PromoCode {
+  id               Int               @id @default(autoincrement())
+  code             String            @unique @db.VarChar(10)
+  promocodeType    PromoCodeType     @default(PUBLIC)
+  discountPercent  Int
+  usageLimit       Int?
+  usedCount        Int               @default(0)
+  expiresAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  startsAt         DateTime?
+  revokedAt        DateTime?
+  allCourses       Boolean           @default(false)
+  promoCodeUsers   PromoCodeUser[]
+  promoCodeCourses PromoCodeCourse[]
+  promoCodeUsages  PromoCodeUsage[]
+  orderItems       OrderItem[]
+}
+
+model PromoCodeUsage {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id])
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  usedAt      DateTime  @default(now())
+  orderId     Int       @unique
+  order       Order     @relation(fields: [orderId], references: [id])
+
+  @@unique([promoCodeId, userId])
+}
+
+model PromoCodeUser {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignedAt  DateTime  @default(now())
+
+  @@unique([promoCodeId, userId])
+}
+
+model PromoCodeCourse {
+  id          Int       @id @default(autoincrement())
+  promoCodeId Int
+  promoCode   PromoCode @relation(fields: [promoCodeId], references: [id], onDelete: Cascade)
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  assignedAt  DateTime  @default(now())
+
+  @@unique([promoCodeId, courseId])
+}
+
+model PromoCodeAttempt {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  failedCount   Int       @default(0)
+  firstFailedAt DateTime?
+}
+
+enum DiscountScope {
+  GLOBAL
+  CATEGORY
+  COURSE
+}
+
+enum PromoCodeType {
+  PERSONAL
+  PUBLIC
+}
