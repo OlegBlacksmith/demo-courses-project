@@ -1,25 +1,28 @@
 model Course {
-  id              Int                 @id @default(autoincrement())
-  publicUId       String              @unique @default(cuid(2))
-  description     String              @db.Text
-  title           String              @db.VarChar(250)
-  createdAt       DateTime            @default(now())
-  deletedAt       DateTime?
-  updatedAt       DateTime            @updatedAt
-  statusChangedAt DateTime            @default(now())
-  picture         String              @db.VarChar(500)
-  price           Int
-  indexNumber     Int
-  categoryId      Int?
-  category        CourseCategory?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  slug            String              @unique @db.VarChar(300)
-  status          CourseStatus        @default(DRAFT)
-  translations    CourseTranslation[]
-  modules         Module[]
-  instructors     CourseInstructor[]
-  enrollments     Enrollment[]
-  orderItems      OrderItem[]
-  cartItems       CartItem[]
+  id               Int                 @id @default(autoincrement())
+  publicUId        String              @unique @default(cuid(2))
+  description      String              @db.Text
+  title            String              @db.VarChar(250)
+  createdAt        DateTime            @default(now())
+  deletedAt        DateTime?
+  updatedAt        DateTime            @updatedAt
+  statusChangedAt  DateTime            @default(now())
+  picture          String              @db.VarChar(500)
+  price            Int
+  indexNumber      Int
+  categoryId       Int?
+  category         CourseCategory?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  slug             String              @unique @db.VarChar(300)
+  status           CourseStatus        @default(DRAFT)
+  translations     CourseTranslation[]
+  modules          Module[]
+  instructors      CourseInstructor[]
+  enrollments      Enrollment[]
+  orderItems       OrderItem[]
+  cartItems        CartItem[]
+  promoEvents      Promotion[]
+  promoCodeCourses PromoCodeCourse[]
+  reviews          Review[]
 }
 
 model CourseTranslation {
@@ -155,6 +158,7 @@ model CourseCategory {
   slug         String                      @unique @db.VarChar(300)
   courses      Course[]
   translations CourseCategoryTranslation[]
+  promoEvents  Promotion[]
 }
 
 model CourseCategoryTranslation {
