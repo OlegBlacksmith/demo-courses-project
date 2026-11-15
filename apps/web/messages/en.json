@@ -1,0 +1,16 @@
+{
+    "HomePage": {
+        "title": "Courses for developers"
+    },
+    "Header": {
+        "siteName": "Demo Courses"
+    },
+    "Footer": {
+        "siteName": "Demo Courses"
+    },
+    "Theme": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+    }
+}
