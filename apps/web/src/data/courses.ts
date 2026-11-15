@@ -1,9 +1,10 @@
+import type { Locale } from "next-intl";
 import "server-only";
 import { prisma } from "./prisma";
 import type { CatalogCourseDTO } from "./dtos/catalog-course-dto";
 
 export async function getCatalogCourses(
-  locale: "ru" | "en",
+  locale: Locale
 ): Promise<CatalogCourseDTO[]> {
   const courses = await prisma.course.findMany({
     where: {
