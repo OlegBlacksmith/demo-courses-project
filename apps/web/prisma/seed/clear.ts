@@ -1,10 +1,19 @@
 import type { PrismaClient } from "../../src/generated/prisma/client";
 
 export async function clearDatabase(prisma: PrismaClient) {
+  await prisma.reviewModeration.deleteMany();
+  await prisma.review.deleteMany();
+  await prisma.promoCodeUsage.deleteMany();
+  await prisma.promoCodeAttempt.deleteMany();
   await prisma.cartItem.deleteMany();
   await prisma.cart.deleteMany();
   await prisma.orderItem.deleteMany();
   await prisma.order.deleteMany();
+  await prisma.promoCodeUser.deleteMany();
+  await prisma.promoCodeCourse.deleteMany();
+  await prisma.promoCode.deleteMany();
+  await prisma.promotionTranslation.deleteMany();
+  await prisma.promotion.deleteMany();
   await prisma.lessonProgress.deleteMany();
   await prisma.enrollment.deleteMany();
   await prisma.moduleInstructor.deleteMany();
