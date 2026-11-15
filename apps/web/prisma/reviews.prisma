@@ -1,0 +1,62 @@
+model Review {
+  id                Int                @id @default(autoincrement())
+  publicUId         String             @unique @default(cuid(2))
+  userId            Int
+  user              User               @relation(fields: [userId], references: [id])
+  courseId          Int
+  course            Course             @relation(fields: [courseId], references: [id])
+  rating            Int
+  overallImpression String             @db.Text
+  whatLiked         String?            @db.Text
+  whatDisliked      String?            @db.Text
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  status            ReviewStatus       @default(PENDING)
+  editCounter       Int                @default(0)
+  editLimit         Int                @default(3)
+  reviewModerations ReviewModeration[]
+
+  @@unique([userId, courseId])
+}
+
+model ReviewModeration {
+  id            Int                    @id @default(autoincrement())
+  reviewId      Int
+  review        Review                 @relation(fields: [reviewId], references: [id])
+  moderatorId   Int
+  moderator     User                   @relation(fields: [moderatorId], references: [id])
+  comment       String?                @db.Text
+  action        ReviewModerationAction
+  createdAt     DateTime               @default(now())
+  returnReasons ReviewReturnReason[]   @default([])
+  rejectReasons ReviewRejectReason[]   @default([])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RETURNED
+}
+
+enum ReviewReturnReason {
+  OFF_TOPIC
+  PRICE_OR_COMPETITORS
+  PROFANITY
+  PERSONAL_DATA
+  LINKS_OR_PROMO
+}
+
+enum ReviewRejectReason {
+  PROHIBITED_CONTENT
+  PLAGIARISM
+  MASS_POSTING
+  SUSPICIOUS_ACTIVITY
+  EDIT_LIMIT_EXCEEDED
+}
+
+enum ReviewModerationAction {
+  RETURNED
+  REJECTED
+  APPROVED
+}
