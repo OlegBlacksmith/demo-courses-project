@@ -14,12 +14,17 @@ model User {
   emailVerified      Boolean            @default(false)
   passwordHash       String
   tel                String?            @unique @db.VarChar(25)
+  promoCodeAttempt   PromoCodeAttempt?
+  userCart           Cart?
   enrollments        Enrollment[]
   userLessonProgress LessonProgress[]
   courseInstructors  CourseInstructor[]
   moduleInstructors  ModuleInstructor[]
   userOrders         Order[]
-  userCart           Cart?
+  promoCodeUsers     PromoCodeUser[]
+  promoCodeUsages    PromoCodeUsage[]
+  reviews            Review[]
+  reviewModerations  ReviewModeration[]
 }
 
 model CourseInstructor {
