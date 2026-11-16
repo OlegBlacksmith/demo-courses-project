@@ -7,6 +7,7 @@ import "../globals.css";
 import { routing } from "@/i18n/routing";
 import { WebHeader } from "@/components/web-header";
 import { WebFooter } from "@/components/web-footer";
+import { InlineScript } from "@/components/inline-script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,7 +49,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <InlineScript html={themeScript} />
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
