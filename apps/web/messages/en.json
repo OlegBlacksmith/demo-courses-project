@@ -1,6 +1,7 @@
 {
     "HomePage": {
-        "title": "Courses for developers"
+        "title": "Courses for developers",
+        "cardSuspense": "Cards are loading"
     },
     "Header": {
         "siteName": "Demo Courses"
