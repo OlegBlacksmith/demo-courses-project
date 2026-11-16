@@ -27,6 +27,7 @@ export async function seedCourses(
       category: { connect: { id: categories.frontend.id } },
       slug: "kurs-po-frontendu",
       status: "PUBLISHED",
+      showOnHome: true,
       translations: {
         create: [
           {
@@ -163,6 +164,7 @@ export async function seedCourses(
       category: { connect: { id: categories.backend.id } },
       slug: "kurs-po-backendu",
       status: "HIDDEN",
+      showOnHome: true,
       translations: {
         create: [
           {
