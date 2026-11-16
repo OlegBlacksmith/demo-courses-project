@@ -14,6 +14,7 @@ model Review {
   status            ReviewStatus       @default(PENDING)
   editCounter       Int                @default(0)
   editLimit         Int                @default(3)
+  showOnHome        Boolean            @default(false)
   reviewModerations ReviewModeration[]
 
   @@unique([userId, courseId])
