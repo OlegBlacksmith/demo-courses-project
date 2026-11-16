@@ -14,6 +14,7 @@ model Course {
   category         CourseCategory?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   slug             String              @unique @db.VarChar(300)
   status           CourseStatus        @default(DRAFT)
+  showOnHome       Boolean             @default(false)
   translations     CourseTranslation[]
   modules          Module[]
   instructors      CourseInstructor[]
